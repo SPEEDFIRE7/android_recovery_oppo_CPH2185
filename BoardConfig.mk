@@ -67,7 +67,7 @@ BOARD_ROOT_EXTRA_FOLDERS += metadata
 
 # --- TWRP Settings ---
 DEVICE_PATH := device/oppo/CPH2185
-TW_DEVICE_VERSION := ansh_m14x
+TW_DEVICE_VERSION := SPEEDFIRE
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/etc/recovery.fstab
 TW_THEME := portrait_hdpi
