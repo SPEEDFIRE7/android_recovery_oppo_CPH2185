@@ -60,4 +60,26 @@ jobs:
           cd ${{ github.workspace }}/OrangeFox
           split -b 1900m \
             fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst \
-            fox_${{
+            fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst.part
+          ls -lh fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst.part*
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@master
+        with:
+          tag_name: ofox-source-${{ inputs.MANIFEST_BRANCH }}-${{ github.run_id }}
+          name: OrangeFox Source ${{ inputs.MANIFEST_BRANCH }} — ${{ github.run_id }}
+          files: |
+            ${{ github.workspace }}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst.part*
+          body: |
+            OrangeFox source branch: ${{ inputs.MANIFEST_BRANCH }}
+
+            **كيفية الاستخدام:**
+            ```bash
+            # دمج الأجزاء
+            cat fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst.part* > fox.tar.zst
+            # فك الضغط
+            tar --use-compress-program="zstd -d" -xf fox.tar.zst
+            ```
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
