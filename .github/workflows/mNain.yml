@@ -46,6 +46,7 @@ jobs:
           fi
           echo "source tree on: $BIG ($BIGFREE GB free)"
           df -h
+
       - name: Install build dependencies
         shell: bash
         run: |
@@ -61,6 +62,7 @@ jobs:
           git config --global user.name "ci"
           git config --global user.email "ci@users.noreply.github.com"
           git config --global color.ui false
+
       - name: Restore source cache
         id: synccache
         uses: actions/cache/restore@v4
@@ -76,6 +78,7 @@ jobs:
           repo init -u https://github.com/AERA-Recovery/android_manifest.git -b aera-16.0 --depth=1
           repo sync -c -j8 --force-sync --no-clone-bundle --no-tags
           df -h /
+
       - name: Save source cache
         if: steps.synccache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -96,13 +99,67 @@ jobs:
           curl -s -o /dev/null -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/$GITHUB_REPOSITORY/git/refs" \
             -d "{\"ref\":\"refs/heads/ci-logs\",\"sha\":\"$GITHUB_SHA\"}" || true
+
       - name: Disk and memory diagnostics
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           { df -h; swapon --show; free -m; du -sh "$GITHUB_WORKSPACE/aera/.repo" 2>/dev/null; du -sh --exclude=.repo "$GITHUB_WORKSPACE/aera" 2>/dev/null; } > "$GITHUB_WORKSPACE/build.log" 2>&1
-          bash "$GITHUB_WORKSPACE/aera/device/oppo/CPH2185/.github/ci-push-log.sh"
+          bash "$GITHUB_WORKSPACE/aera/device/oppo/CPH1911/.github/ci-push-log.sh"
+
       - name: Add disk swap for soong_build
         shell: bash
         run: |
+          # soong_build was OOM-killed at ~13.6 GB RSS on this 16 GB runner; zram does not help (it lives in RAM),
+          # so use real disk swap, on /mnt (separate device) when it has room, else on the source disk.
+          sudo swapoff -a || true
+          sudo rm -f /swapfile /mnt/swapfile
+          ROOT_FREE=$(df --output=avail -BG / | tail -1 | tr -dc 0-9)
+          MNT_FREE=$(df --output=avail -BG /mnt 2>/dev/null | tail -1 | tr -dc 0-9)
+          echo "free GB: /=$ROOT_FREE /mnt=${MNT_FREE:-0}"
+          if [ "${MNT_FREE:-0}" -ge 26 ]; then SWF=/mnt/swapfile; FREE=$MNT_FREE; SZ=$(( FREE - 2 )); else SWF=/swapfile; FREE=$ROOT_FREE; SZ=$(( FREE - 14 )); fi
+          [ "$SZ" -gt 28 ] && SZ=28
+          if [ "$SZ" -ge 8 ]; then
+            sudo fallocate -l ${SZ}G $SWF && sudo chmod 600 $SWF && sudo mkswap $SWF >/dev/null && sudo swapon $SWF
+          fi
+          sudo systemctl stop docker.socket docker containerd snapd mysql postgresql apache2 nginx php8.1-fpm 2>/dev/null || true
+          sync; echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null
+          sudo sysctl vm.swappiness=100
+          df -h; swapon --show; free -h
+
+      - name: Build recovery image
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PUSH="bash $GITHUB_WORKSPACE/aera/device/oppo/CPH1911/.github/ci-push-log.sh"
+          trap "$PUSH" EXIT
+          trap "$PUSH; exit 143" TERM
+          cd "$GITHUB_WORKSPACE/aera"
+          export ALLOW_MISSING_DEPENDENCIES=true
+          # Keep soong_build's Go heap small (it was OOM-killed at ~14 GB RSS)
+          export GOGC=40 GOMEMLIMIT=11GiB GOMAXPROCS=2
+          source build/envsetup.sh
+          lunch twrp_CPH1911-bp2a-eng
+          # Snapshot memory + build log to the ci-logs branch every 2 minutes
+          ( while true; do sleep 120; $PUSH; done ) &
+          mka adbd recoveryimage -j2 2>&1 | tee "$GITHUB_WORKSPACE/build.log"
+
+      - name: Upload recovery image
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-CPH2185
+          path: aera/out/target/product/CPH2185/recovery.img
+          if-no-files-found: error
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: |
+            build.log
+            aera/out/error.log
+          if-no-files-found: warn
