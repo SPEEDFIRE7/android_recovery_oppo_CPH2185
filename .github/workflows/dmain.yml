@@ -29,7 +29,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y git aria2 tar zstd
+          sudo apt-get install -y git aria2 tar zstd curl python3
+          mkdir -p ~/.bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
+          chmod a+x ~/.bin/repo
+          echo "$HOME/.bin" >> $GITHUB_PATH
 
       - name: Configure git
         run: |
@@ -49,13 +53,12 @@ jobs:
       - name: Compress source
         run: |
           cd ${{ github.workspace }}/OrangeFox
-          echo "Compressing source — this will take a while..."
           tar --use-compress-program="zstd -T0 -3" \
             -cf fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst \
             fox_${{ inputs.MANIFEST_BRANCH }}
           ls -lh fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst
 
-      - name: Split archive (GitHub 2GB limit)
+      - name: Split archive
         run: |
           cd ${{ github.workspace }}/OrangeFox
           split -b 1900m \
@@ -75,9 +78,7 @@ jobs:
 
             **كيفية الاستخدام:**
             ```bash
-            # دمج الأجزاء
             cat fox_${{ inputs.MANIFEST_BRANCH }}.tar.zst.part* > fox.tar.zst
-            # فك الضغط
             tar --use-compress-program="zstd -d" -xf fox.tar.zst
             ```
           prerelease: true
