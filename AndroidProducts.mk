@@ -18,3 +18,6 @@
 
 PRODUCT_MAKEFILES := \
      $(LOCAL_DIR)/twrp_CPH2185.mk
+
+# Lunch target for modern Android build systems.
+COMMON_LUNCH_CHOICES := twrp_CPH2185-eng
