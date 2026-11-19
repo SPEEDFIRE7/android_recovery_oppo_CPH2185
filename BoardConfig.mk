@@ -65,6 +65,23 @@ BOARD_SUPPRESS_SECURE_ERASE := true
 BOARD_USES_METADATA_PARTITION := true
 BOARD_ROOT_EXTRA_FOLDERS += metadata
 
+# --- Encryption / Decryption (ColorOS 10 + modern GSI) ---
+# Enable Android file-based encryption support.
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO_FBE := true
+
+# Support metadata-encrypted /data where the installed GSI uses it.
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
+
+# fscrypt policy v2 is required by many Android 11+ GSIs.
+TW_USE_FSCRYPT_POLICY := 2
+
+# Mount data early so recovery can prepare/decrypt user storage.
+TW_PREPARE_DATA_MEDIA_EARLY := true
+
+# Use the device's Keymaster implementation (Trustonic v4.0 is shipped here).
+TW_FORCE_KEYMASTER_VER := true
+
 # --- TWRP Settings ---
 DEVICE_PATH := device/oppo/CPH2185
 TW_DEVICE_VERSION := SPEEDFIRE
