@@ -79,7 +79,8 @@ TW_USE_FSCRYPT_POLICY := 2
 # Mount data early so recovery can prepare/decrypt user storage.
 TW_PREPARE_DATA_MEDIA_EARLY := true
 
-# Use the device's Keymaster implementation (Trustonic v4.0 is shipped here).
+# Use the device's Trustonic Keymaster HAL (android.hardware.keymaster@4.0).
+OF_DEFAULT_KEYMASTER_VERSION := 4.0
 TW_FORCE_KEYMASTER_VER := true
 
 # --- TWRP Settings ---
