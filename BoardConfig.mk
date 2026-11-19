@@ -38,6 +38,7 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 AB_OTA_UPDATER := false
 
 TARGET_PREBUILT_KERNEL := device/oppo/CPH2185/prebuilt/kernel
+BOARD_PREBUILT_DTBIMAGE := device/oppo/CPH2185/prebuilt/dtb/mt6765.dtb
 BOARD_PREBUILT_DTBOIMAGE := device/oppo/CPH2185/prebuilt/dtbo.img
 
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
