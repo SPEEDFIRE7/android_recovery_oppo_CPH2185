@@ -1,30 +1,32 @@
-name: OrangeFox - Builder
+name: OrangeFox Recovery Builder
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: 🦊 Building OrangeFox Recovery
+    name: Build OrangeFox R12.1 for OPPO A15 (CPH2185)
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-    permissions: write-all
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout device tree
+        uses: actions/checkout@v4
 
-    - name: OrangeFox Build
-      uses: UWU-TEAM/UWU-OrangeFox-Builder@v1.0.0
-      with:
-        USER_NAME: 'YourName'
-        USER_EMAIL: 'YourE-mail@gmail.com'
-        DEVICE_TREE: 'https://github.com/ansh-m14x/android_recovery_oppo_CPH2185'
-        DEVICE_TREE_BRANCH: 'PBRP'
-        DEVICE_PATH: 'device/OPPO/CPH2185'
-        DEVICE_NAME: 'CPH2185'
-        BUILD_TARGET: 'recovery'
-        TG_CHAT_ID: '${{ secrets.TG_CHAT_ID }}'
-        TG_TOKEN: '${{ secrets.TG_TOKEN }}'
-        MAINTAINER_URL: 'https://i.ibb.co.com/8gyjXq06/maintainer.png'
-        GH_RELEASE: 'true'
+      - name: Build OrangeFox
+        uses: UWU-TEAM/UWU-OrangeFox-Builder@v1.0.0
+        with:
+          USER_NAME: 'SPEEDFIRE7'
+          USER_EMAIL: 'SPEEDFIRE7@users.noreply.github.com'
+          FOX_SYNC: 'https://gitlab.com/OrangeFox/sync.git'
+          FOX_SYNC_BRANCH: '12.1'
+          DEVICE_TREE: 'https://github.com/SPEEDFIRE7/android_recovery_oppo_CPH2185'
+          DEVICE_TREE_BRANCH: 'OFOX'
+          DEVICE_PATH: 'device/oppo/CPH2185'
+          DEVICE_NAME: 'CPH2185'
+          BUILD_TARGET: 'recovery'
+          MAINTAINER_URL: ''
+          GH_RELEASE: 'true'
