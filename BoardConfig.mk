@@ -33,8 +33,8 @@ BOARD_DTB_OFFSET := 0x00e88000
 BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
-# --- Recovery as Boot (Crucial for MTK) ---
-BOARD_USES_RECOVERY_AS_BOOT := true
+# --- Recovery partition ---
+# CPH2185 has a dedicated recovery partition; build recovery.img.
 AB_OTA_UPDATER := false
 
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
