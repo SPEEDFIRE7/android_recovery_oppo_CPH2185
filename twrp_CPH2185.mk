@@ -39,11 +39,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.build.security_patch=2099-12-31 \
     ro.treble.enabled=true
 
-# Bypass anti-rollback ROMs protection
-# Set build date to Jan 1 2009 00:00:00
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.date.utc=1230768000
-
 PRODUCT_PACKAGES += \
     android.hardware.fastboot@1.0-impl-mock \
     android.hardware.fastboot@1.0-impl-mock.recovery
