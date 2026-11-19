@@ -37,8 +37,8 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 # CPH2185 has a dedicated recovery partition; build recovery.img.
 AB_OTA_UPDATER := false
 
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+TARGET_PREBUILT_KERNEL := device/oppo/CPH2185/prebuilt/kernel
+BOARD_PREBUILT_DTBOIMAGE := device/oppo/CPH2185/prebuilt/dtbo.img
 
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
