@@ -38,10 +38,9 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 AB_OTA_UPDATER := false
 
 TARGET_PREBUILT_KERNEL := device/oppo/CPH2185/prebuilt/kernel
-BOARD_PREBUILT_DTBIMAGE := device/oppo/CPH2185/prebuilt/dtb/mt6765.dtb
+# Android 12.1 concatenates all *.dtb files from this directory into dtb.img.
+BOARD_PREBUILT_DTBIMAGE_DIR := device/oppo/CPH2185/prebuilt/dtb
 BOARD_PREBUILT_DTBOIMAGE := device/oppo/CPH2185/prebuilt/dtbo.img
-# Use the device-tree blob already provided by this device tree.
-BOARD_PREBUILT_DTBIMAGE := device/oppo/CPH2185/prebuilt/dtb/mt6765.dtb
 
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
