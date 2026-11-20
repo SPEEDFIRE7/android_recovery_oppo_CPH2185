@@ -70,3 +70,14 @@ on property:twrp.decrypt.done=true
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
+
+# Persistent flashlight service: keeps /dev/flashlight open.
+service flashlightd /sbin/flashlightd daemon
+    class core
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+on boot
+    start flashlightd
