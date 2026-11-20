@@ -19,6 +19,9 @@ TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true
 TARGET_BOARD_PLATFORM := mt6765
 
+# Device tree path must be defined before immediate := assignments.
+DEVICE_PATH := device/oppo/CPH2185
+
 # --- Kernel ---
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user loop.max_part=70
 BOARD_KERNEL_IMAGE_NAME := kernel
@@ -66,7 +69,6 @@ BOARD_USES_METADATA_PARTITION := true
 BOARD_ROOT_EXTRA_FOLDERS += metadata
 
 # --- TWRP Settings ---
-DEVICE_PATH := device/oppo/CPH2185
 TW_DEVICE_VERSION := SPEEDFIRE
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/etc/recovery.fstab
