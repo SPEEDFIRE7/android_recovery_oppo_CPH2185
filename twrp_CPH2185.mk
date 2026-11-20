@@ -36,7 +36,6 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 # HACK: Set vendor patch level and enable Treble
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.build.security_patch=2099-12-31 \
     ro.treble.enabled=true
 
 # Bypass anti-rollback ROMs protection
