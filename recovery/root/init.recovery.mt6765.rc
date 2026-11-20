@@ -72,7 +72,7 @@ on property:twrp.decrypt.done=true
     stop gatekeeper-1-0
 
 # Persistent flashlight service: keeps /dev/flashlight open.
-service flashlightd /sbin/flashlightd daemon
+service flashlightd /system/bin/flashlightd daemon
     class core
     user root
     group root
