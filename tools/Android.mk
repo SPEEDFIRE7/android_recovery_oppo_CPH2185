@@ -1,0 +1,10 @@
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := flashlightd
+LOCAL_SRC_FILES := flashlightd.c
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
+LOCAL_CFLAGS := -Wall -Wextra -Werror -O2
+include $(BUILD_EXECUTABLE)
