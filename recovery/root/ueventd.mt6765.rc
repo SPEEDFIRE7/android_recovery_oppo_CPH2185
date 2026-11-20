@@ -144,3 +144,6 @@
 
 # TrustKernel add
 /dev/tkcoredrv            0660   system     system
+
+# CPH2185 custom flashlight character device
+/dev/flashlight 0660 root root
