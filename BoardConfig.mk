@@ -19,6 +19,9 @@ TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true
 TARGET_BOARD_PLATFORM := mt6765
 
+# Set vendor security patch level once; Android generates the property from this.
+VENDOR_SECURITY_PATCH := 2099-12-31
+
 # Device tree path must be defined before immediate := assignments.
 DEVICE_PATH := device/oppo/CPH2185
 
